@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+// Error represents a structured domain error with machine-readable code and details.
+message Error {
+  string code = 1;
+  string message = 2;
+  map<string, string> details = 3;
+}

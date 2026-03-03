@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+import "delicasa/v1/controller.proto";
+
+// ControllerService provides operations for managing vending machine controllers.
+service ControllerService {
+  rpc ListControllers(ListControllersRequest) returns (ListControllersResponse);
+  rpc GetController(GetControllerRequest) returns (GetControllerResponse);
+  rpc UpdateControllerName(UpdateControllerNameRequest) returns (UpdateControllerNameResponse);
+}
+
+message ListControllersRequest {
+  string correlation_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListControllersResponse {
+  string correlation_id = 1;
+  repeated Controller controllers = 2;
+  string next_page_token = 3;
+}
+
+message GetControllerRequest {
+  string correlation_id = 1;
+  string controller_id = 2;
+}
+
+message GetControllerResponse {
+  string correlation_id = 1;
+  Controller controller = 2;
+}
+
+message UpdateControllerNameRequest {
+  string correlation_id = 1;
+  string controller_id = 2;
+  string display_name = 3;
+}
+
+message UpdateControllerNameResponse {
+  string correlation_id = 1;
+  Controller controller = 2;
+}

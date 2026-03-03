@@ -1,0 +1,11 @@
+version: v2
+
+clean: true
+
+plugins:
+  - local: protoc-gen-es
+    out: gen/ts
+    opt: target=js+dts,import_extension=.js
+
+inputs:
+  - directory: proto
