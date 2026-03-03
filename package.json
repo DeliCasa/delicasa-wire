@@ -1,0 +1,40 @@
+{
+  "name": "@delicasa/wire",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "gRPC-first contracts, generated TypeScript, and Zod domain validation for the DeliCasa platform",
+  "files": [
+    "gen/ts",
+    "src/zod"
+  ],
+  "exports": {
+    "./gen/*": {
+      "types": "./gen/ts/*.d.ts",
+      "default": "./gen/ts/*.js"
+    },
+    "./zod": {
+      "types": "./src/zod/index.d.ts",
+      "default": "./src/zod/index.js"
+    }
+  },
+  "scripts": {
+    "gen": "buf generate",
+    "lint:proto": "buf lint",
+    "breaking:proto": "TAG=$(git describe --tags --abbrev=0 2>/dev/null) && buf breaking --against .git#tag=$TAG || echo 'No tags found — skipping breaking change check'",
+    "fmt:proto": "buf format -w",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0",
+    "@connectrpc/connect": "^2.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.47.0",
+    "@bufbuild/protoc-gen-es": "^2.2.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}
