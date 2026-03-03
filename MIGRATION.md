@@ -6,7 +6,7 @@
 
 ```bash
 # BridgeServer or NextClient
-pnpm add @delicasa/wire@github:CITi-DeliCasa/delicasa-wire#v0.1.0
+pnpm add @delicasa/wire@github:DeliCasa/delicasa-wire#v0.1.0
 ```
 
 ### Via workspace path (monorepo)
