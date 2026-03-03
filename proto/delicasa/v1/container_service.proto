@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+import "delicasa/v1/container.proto";
+
+// ContainerAccessService provides operations for opening and closing container compartments.
+service ContainerAccessService {
+  rpc OpenContainer(OpenContainerRequest) returns (OpenContainerResponse);
+  rpc CloseContainer(CloseContainerRequest) returns (CloseContainerResponse);
+}
+
+message OpenContainerRequest {
+  string correlation_id = 1;
+  string container_id = 2;
+  string controller_id = 3;
+}
+
+message OpenContainerResponse {
+  string correlation_id = 1;
+  Container container = 2;
+}
+
+message CloseContainerRequest {
+  string correlation_id = 1;
+  string container_id = 2;
+  string controller_id = 3;
+}
+
+message CloseContainerResponse {
+  string correlation_id = 1;
+  Container container = 2;
+}

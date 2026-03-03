@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+// ContainerState represents the physical state of a container compartment.
+enum ContainerState {
+  CONTAINER_STATE_UNSPECIFIED = 0;
+  CONTAINER_STATE_OPEN = 1;
+  CONTAINER_STATE_CLOSED = 2;
+  CONTAINER_STATE_LOCKED = 3;
+}
+
+// Container represents a compartment within a controller that holds products.
+message Container {
+  string id = 1;
+  string controller_id = 2;
+  int32 slot_number = 3;
+  ContainerState state = 4;
+}

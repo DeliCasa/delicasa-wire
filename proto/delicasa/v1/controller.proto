@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// ControllerStatus represents the operational state of a vending machine controller.
+enum ControllerStatus {
+  CONTROLLER_STATUS_UNSPECIFIED = 0;
+  CONTROLLER_STATUS_ONLINE = 1;
+  CONTROLLER_STATUS_OFFLINE = 2;
+  CONTROLLER_STATUS_MAINTENANCE = 3;
+}
+
+// Location represents the physical placement of a controller.
+message Location {
+  string address = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+// Controller represents a physical vending machine unit.
+message Controller {
+  string id = 1;
+  string display_name = 2;
+  ControllerStatus status = 3;
+  Location location = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
