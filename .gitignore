@@ -1,0 +1,7 @@
+node_modules/
+gen/
+.turbo/
+*.tsbuildinfo
+.DS_Store
+*.tmp
+*.swp
