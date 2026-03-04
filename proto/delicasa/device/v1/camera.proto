@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum CameraStatus {
+  CAMERA_STATUS_UNSPECIFIED = 0;
+  CAMERA_STATUS_ONLINE = 1;
+  CAMERA_STATUS_OFFLINE = 2;
+  CAMERA_STATUS_IDLE = 3;
+  CAMERA_STATUS_ERROR = 4;
+  CAMERA_STATUS_REBOOTING = 5;
+  CAMERA_STATUS_DISCOVERED = 6;
+  CAMERA_STATUS_PAIRING = 7;
+  CAMERA_STATUS_CONNECTING = 8;
+}
+
+message CameraHealth {
+  int32 wifi_rssi = 1;
+  int64 free_heap = 2;
+  int64 uptime_seconds = 3;
+  string firmware_version = 4;
+  string resolution = 5;
+  google.protobuf.Timestamp last_capture = 6;
+}
+
+message Camera {
+  string device_id = 1;
+  string name = 2;
+  CameraStatus status = 3;
+  string container_id = 4;
+  int32 position = 5;
+  google.protobuf.Timestamp last_seen = 6;
+  CameraHealth health = 7;
+  string ip_address = 8;
+  string mac_address = 9;
+}

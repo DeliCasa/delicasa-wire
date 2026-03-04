@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0;
+  SESSION_STATUS_ACTIVE = 1;
+  SESSION_STATUS_COMPLETE = 2;
+  SESSION_STATUS_PARTIAL = 3;
+  SESSION_STATUS_FAILED = 4;
+}
+
+message OperationSession {
+  string session_id = 1;
+  string container_id = 2;
+  SessionStatus status = 3;
+  google.protobuf.Timestamp started_at = 4;
+  double elapsed_seconds = 5;
+}
