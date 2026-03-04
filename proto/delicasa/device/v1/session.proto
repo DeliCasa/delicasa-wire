@@ -18,4 +18,10 @@ message OperationSession {
   SessionStatus status = 3;
   google.protobuf.Timestamp started_at = 4;
   double elapsed_seconds = 5;
+  int32 total_captures = 6;
+  int32 successful_captures = 7;
+  int32 failed_captures = 8;
+  bool has_before_open = 9;
+  bool has_after_close = 10;
+  bool pair_complete = 11;
 }

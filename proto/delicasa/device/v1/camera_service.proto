@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "delicasa/device/v1/camera.proto";
+import "google/protobuf/timestamp.proto";
+
+// CameraService provides access to registered cameras.
+service CameraService {
+  // List all registered cameras with status and health info.
+  rpc ListCameras(ListCamerasRequest) returns (ListCamerasResponse);
+
+  // Get a single camera by device_id.
+  rpc GetCamera(GetCameraRequest) returns (GetCameraResponse);
+
+  // Get quick camera status check.
+  rpc GetCameraStatus(GetCameraStatusRequest) returns (GetCameraStatusResponse);
+
+  // Reconcile discovered cameras to online status.
+  // Requires API key authentication.
+  rpc ReconcileCameras(ReconcileCamerasRequest) returns (ReconcileCamerasResponse);
+}
+
+message ListCamerasRequest {
+  string correlation_id = 1;
+}
+
+message ListCamerasResponse {
+  string correlation_id = 1;
+  repeated Camera cameras = 2;
+  int32 total_count = 3;
+}
+
+message GetCameraRequest {
+  string correlation_id = 1;
+  string device_id = 2;
+}
+
+message GetCameraResponse {
+  string correlation_id = 1;
+  Camera camera = 2;
+}
+
+message GetCameraStatusRequest {
+  string correlation_id = 1;
+  string device_id = 2;
+}
+
+message GetCameraStatusResponse {
+  string correlation_id = 1;
+  string device_id = 2;
+  CameraStatus status = 3;
+  google.protobuf.Timestamp last_seen = 4;
+  bool ready = 5;
+}
+
+message ReconcileCamerasRequest {
+  string correlation_id = 1;
+}
+
+message ReconcileCamerasResponse {
+  string correlation_id = 1;
+  int32 reconciled_count = 2;
+  repeated string reconciled_device_ids = 3;
+}

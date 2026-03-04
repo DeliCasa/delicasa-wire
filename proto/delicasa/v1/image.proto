@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// ImageSortField specifies how to order image query results.
+enum ImageSortField {
+  IMAGE_SORT_FIELD_UNSPECIFIED = 0;
+  IMAGE_SORT_FIELD_CREATED_AT = 1;
+  IMAGE_SORT_FIELD_SIZE = 2;
+}
+
+// Image represents a stored evidence capture visible to client applications.
+message Image {
+  string id = 1;
+  string object_key = 2;
+  string controller_id = 3;
+  string container_id = 4;
+  string session_id = 5;
+  string capture_tag = 6;
+  string content_type = 7;
+  int64 size_bytes = 8;
+  int32 width = 9;
+  int32 height = 10;
+  google.protobuf.Timestamp created_at = 11;
+}

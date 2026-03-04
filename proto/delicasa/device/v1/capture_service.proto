@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum UploadStatus {
+  UPLOAD_STATUS_UNSPECIFIED = 0;
+  UPLOAD_STATUS_UPLOADED = 1;
+  UPLOAD_STATUS_FAILED = 2;
+  UPLOAD_STATUS_UNVERIFIED = 3;
+}
+
+// CaptureService handles image capture via MQTT-triggered camera commands.
+service CaptureService {
+  // Trigger an image capture on a specific camera.
+  // Supports idempotency via idempotency_key field.
+  rpc CaptureImage(CaptureImageRequest) returns (CaptureImageResponse);
+}
+
+message CaptureImageRequest {
+  string correlation_id = 1;
+  string camera_id = 2;
+  // Optional idempotency key for request deduplication.
+  string idempotency_key = 3;
+}
+
+message CaptureImageResponse {
+  string correlation_id = 1;
+  string evidence_id = 2;
+  string camera_id = 3;
+  google.protobuf.Timestamp captured_at = 4;
+  string content_type = 5;
+  int64 image_size_bytes = 6;
+  // S3 object key (if uploaded to object storage).
+  string object_key = 7;
+  // Raw JPEG image data (if no S3 upload configured).
+  bytes image_data = 8;
+  UploadStatus upload_status = 9;
+  // True if this response was served from idempotency cache.
+  bool cached = 10;
+}

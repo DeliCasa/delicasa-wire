@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "delicasa/device/v1/session.proto";
+
+// SessionService provides access to evidence collection sessions.
+service SessionService {
+  // List recent sessions with diagnostic info.
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+
+  // Get detailed session information including captures.
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse);
+}
+
+message ListSessionsRequest {
+  string correlation_id = 1;
+  // Maximum sessions to return (default 50, max 200).
+  int32 limit = 2;
+}
+
+message ListSessionsResponse {
+  string correlation_id = 1;
+  repeated OperationSession sessions = 2;
+  int32 total_count = 3;
+}
+
+message GetSessionRequest {
+  string correlation_id = 1;
+  string session_id = 2;
+}
+
+message GetSessionResponse {
+  string correlation_id = 1;
+  OperationSession session = 2;
+}

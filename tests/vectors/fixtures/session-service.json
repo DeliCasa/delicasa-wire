@@ -1,0 +1,95 @@
+{
+  "ListSessionsResponse": {
+    "correlationId": "corr-session-list-001",
+    "sessions": [
+      {
+        "sessionId": "session-001",
+        "containerId": "container-001",
+        "status": "SESSION_STATUS_COMPLETE",
+        "startedAt": "2026-03-04T10:29:50Z",
+        "elapsedSeconds": 70.5,
+        "totalCaptures": 2,
+        "successfulCaptures": 2,
+        "failedCaptures": 0,
+        "hasBeforeOpen": true,
+        "hasAfterClose": true,
+        "pairComplete": true
+      },
+      {
+        "sessionId": "session-002",
+        "containerId": "container-002",
+        "status": "SESSION_STATUS_ACTIVE",
+        "startedAt": "2026-03-04T10:35:00Z",
+        "elapsedSeconds": 15.2,
+        "totalCaptures": 1,
+        "successfulCaptures": 1,
+        "failedCaptures": 0,
+        "hasBeforeOpen": true,
+        "hasAfterClose": false,
+        "pairComplete": false
+      }
+    ],
+    "totalCount": 2
+  },
+  "ListSessionsResponse_allStatuses": {
+    "correlationId": "corr-session-all-statuses",
+    "sessions": [
+      {
+        "sessionId": "session-active",
+        "containerId": "container-001",
+        "status": "SESSION_STATUS_ACTIVE",
+        "startedAt": "2026-03-04T10:35:00Z",
+        "elapsedSeconds": 5.0
+      },
+      {
+        "sessionId": "session-complete",
+        "containerId": "container-001",
+        "status": "SESSION_STATUS_COMPLETE",
+        "startedAt": "2026-03-04T10:00:00Z",
+        "elapsedSeconds": 65.0,
+        "totalCaptures": 2,
+        "successfulCaptures": 2,
+        "pairComplete": true
+      },
+      {
+        "sessionId": "session-partial",
+        "containerId": "container-002",
+        "status": "SESSION_STATUS_PARTIAL",
+        "startedAt": "2026-03-04T09:50:00Z",
+        "elapsedSeconds": 120.0,
+        "totalCaptures": 2,
+        "successfulCaptures": 1,
+        "failedCaptures": 1,
+        "hasBeforeOpen": true,
+        "pairComplete": false
+      },
+      {
+        "sessionId": "session-failed",
+        "containerId": "container-003",
+        "status": "SESSION_STATUS_FAILED",
+        "startedAt": "2026-03-04T09:00:00Z",
+        "elapsedSeconds": 30.0,
+        "totalCaptures": 1,
+        "failedCaptures": 1,
+        "pairComplete": false
+      }
+    ],
+    "totalCount": 4
+  },
+  "GetSessionResponse": {
+    "correlationId": "corr-session-get-001",
+    "session": {
+      "sessionId": "session-001",
+      "containerId": "container-001",
+      "status": "SESSION_STATUS_COMPLETE",
+      "startedAt": "2026-03-04T10:29:50Z",
+      "elapsedSeconds": 70.5,
+      "totalCaptures": 2,
+      "successfulCaptures": 2,
+      "failedCaptures": 0,
+      "hasBeforeOpen": true,
+      "hasAfterClose": true,
+      "pairComplete": true
+    }
+  }
+}
