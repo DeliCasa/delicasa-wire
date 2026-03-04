@@ -1,0 +1,140 @@
+{
+  "GetEvidencePairResponse": {
+    "correlationId": "corr-evidence-pair-001",
+    "pair": {
+      "contractVersion": "v1",
+      "sessionId": "session-001",
+      "containerId": "container-001",
+      "pairStatus": "EVIDENCE_PAIR_STATUS_COMPLETE",
+      "before": {
+        "evidenceId": "ev-before-001",
+        "captureTag": "CAPTURE_TAG_BEFORE_OPEN",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T10:30:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "245760",
+        "objectKey": "evidence/2026/03/04/ev-before-001.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-001",
+        "containerId": "container-001"
+      },
+      "after": {
+        "evidenceId": "ev-after-001",
+        "captureTag": "CAPTURE_TAG_AFTER_CLOSE",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T10:31:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "251904",
+        "objectKey": "evidence/2026/03/04/ev-after-001.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-001",
+        "containerId": "container-001"
+      },
+      "queriedAt": "2026-03-04T10:31:05Z"
+    }
+  },
+  "GetEvidencePairResponse_incomplete": {
+    "correlationId": "corr-evidence-pair-002",
+    "pair": {
+      "contractVersion": "v1",
+      "sessionId": "session-002",
+      "containerId": "container-002",
+      "pairStatus": "EVIDENCE_PAIR_STATUS_INCOMPLETE",
+      "before": {
+        "evidenceId": "ev-before-002",
+        "captureTag": "CAPTURE_TAG_BEFORE_OPEN",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T10:35:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "240000",
+        "objectKey": "evidence/2026/03/04/ev-before-002.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-002",
+        "containerId": "container-002"
+      },
+      "queriedAt": "2026-03-04T10:36:00Z",
+      "retryAfterSeconds": 5
+    }
+  },
+  "GetEvidencePairResponse_missing": {
+    "correlationId": "corr-evidence-pair-003",
+    "pair": {
+      "contractVersion": "v1",
+      "sessionId": "session-003",
+      "containerId": "container-003",
+      "pairStatus": "EVIDENCE_PAIR_STATUS_MISSING",
+      "queriedAt": "2026-03-04T10:40:00Z",
+      "retryAfterSeconds": 10
+    }
+  },
+  "GetSessionEvidenceResponse": {
+    "correlationId": "corr-session-ev-001",
+    "sessionId": "session-001",
+    "containerId": "container-001",
+    "captures": [
+      {
+        "evidenceId": "ev-before-001",
+        "captureTag": "CAPTURE_TAG_BEFORE_OPEN",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T10:30:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "245760",
+        "objectKey": "evidence/2026/03/04/ev-before-001.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-001",
+        "containerId": "container-001"
+      },
+      {
+        "evidenceId": "ev-after-001",
+        "captureTag": "CAPTURE_TAG_AFTER_CLOSE",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T10:31:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "251904",
+        "objectKey": "evidence/2026/03/04/ev-after-001.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-001",
+        "containerId": "container-001"
+      }
+    ],
+    "totalCaptures": 2,
+    "successfulCaptures": 2,
+    "failedCaptures": 0
+  },
+  "GetSessionEvidenceResponse_withFailures": {
+    "correlationId": "corr-session-ev-002",
+    "sessionId": "session-004",
+    "containerId": "container-001",
+    "captures": [
+      {
+        "evidenceId": "ev-before-004",
+        "captureTag": "CAPTURE_TAG_BEFORE_OPEN",
+        "status": "CAPTURE_STATUS_CAPTURED",
+        "cameraId": "esp32-cam-01",
+        "capturedAt": "2026-03-04T11:00:00Z",
+        "contentType": "image/jpeg",
+        "imageSizeBytes": "230000",
+        "objectKey": "evidence/2026/03/04/ev-before-004.jpg",
+        "uploadStatus": "uploaded",
+        "sessionId": "session-004",
+        "containerId": "container-001"
+      },
+      {
+        "evidenceId": "ev-after-004",
+        "captureTag": "CAPTURE_TAG_AFTER_CLOSE",
+        "status": "CAPTURE_STATUS_TIMEOUT",
+        "cameraId": "esp32-cam-01",
+        "sessionId": "session-004",
+        "containerId": "container-001"
+      }
+    ],
+    "totalCaptures": 2,
+    "successfulCaptures": 1,
+    "failedCaptures": 1
+  }
+}

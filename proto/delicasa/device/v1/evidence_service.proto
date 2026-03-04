@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "delicasa/device/v1/evidence.proto";
+
+// EvidenceService provides access to evidence captures and pairs.
+service EvidenceService {
+  // Get the before/after evidence pair for a session.
+  rpc GetEvidencePair(GetEvidencePairRequest) returns (GetEvidencePairResponse);
+
+  // Get all evidence captures for a session.
+  rpc GetSessionEvidence(GetSessionEvidenceRequest) returns (GetSessionEvidenceResponse);
+}
+
+message GetEvidencePairRequest {
+  string correlation_id = 1;
+  string session_id = 2;
+}
+
+message GetEvidencePairResponse {
+  string correlation_id = 1;
+  EvidencePair pair = 2;
+}
+
+message GetSessionEvidenceRequest {
+  string correlation_id = 1;
+  string session_id = 2;
+}
+
+message GetSessionEvidenceResponse {
+  string correlation_id = 1;
+  string session_id = 2;
+  string container_id = 3;
+  repeated EvidenceCapture captures = 4;
+  int32 total_captures = 5;
+  int32 successful_captures = 6;
+  int32 failed_captures = 7;
+}

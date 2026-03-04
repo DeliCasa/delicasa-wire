@@ -1,0 +1,121 @@
+{
+  "ListCamerasResponse": {
+    "correlationId": "corr-cam-list-001",
+    "cameras": [
+      {
+        "deviceId": "esp32-cam-01",
+        "name": "Container 1 Camera",
+        "status": "CAMERA_STATUS_ONLINE",
+        "containerId": "container-001",
+        "position": 1,
+        "lastSeen": "2026-03-04T10:30:00Z",
+        "health": {
+          "wifiRssi": -45,
+          "freeHeap": "125000",
+          "uptimeSeconds": "3600",
+          "firmwareVersion": "2.1.0",
+          "resolution": "1600x1200",
+          "lastCapture": "2026-03-04T10:29:55Z"
+        },
+        "ipAddress": "192.168.10.101",
+        "macAddress": "AA:BB:CC:DD:EE:01"
+      },
+      {
+        "deviceId": "esp32-cam-02",
+        "name": "Container 2 Camera",
+        "status": "CAMERA_STATUS_OFFLINE",
+        "containerId": "container-002",
+        "position": 2,
+        "ipAddress": "192.168.10.102",
+        "macAddress": "AA:BB:CC:DD:EE:02"
+      },
+      {
+        "deviceId": "esp32-cam-03",
+        "name": "Container 3 Camera",
+        "status": "CAMERA_STATUS_ERROR",
+        "containerId": "container-003",
+        "position": 3,
+        "lastSeen": "2026-03-04T09:00:00Z",
+        "ipAddress": "192.168.10.103",
+        "macAddress": "AA:BB:CC:DD:EE:03"
+      },
+      {
+        "deviceId": "esp32-cam-04",
+        "name": "Container 4 Camera",
+        "status": "CAMERA_STATUS_REBOOTING",
+        "containerId": "container-004",
+        "position": 4,
+        "lastSeen": "2026-03-04T10:28:00Z",
+        "ipAddress": "192.168.10.104",
+        "macAddress": "AA:BB:CC:DD:EE:04"
+      }
+    ],
+    "totalCount": 4
+  },
+  "ListCamerasResponse_allStatuses": {
+    "correlationId": "corr-cam-all-statuses",
+    "cameras": [
+      { "deviceId": "cam-online", "status": "CAMERA_STATUS_ONLINE", "position": 1 },
+      { "deviceId": "cam-offline", "status": "CAMERA_STATUS_OFFLINE", "position": 1 },
+      { "deviceId": "cam-idle", "status": "CAMERA_STATUS_IDLE", "position": 1 },
+      { "deviceId": "cam-error", "status": "CAMERA_STATUS_ERROR", "position": 1 },
+      { "deviceId": "cam-rebooting", "status": "CAMERA_STATUS_REBOOTING", "position": 1 },
+      { "deviceId": "cam-discovered", "status": "CAMERA_STATUS_DISCOVERED", "position": 1 },
+      { "deviceId": "cam-pairing", "status": "CAMERA_STATUS_PAIRING", "position": 1 },
+      { "deviceId": "cam-connecting", "status": "CAMERA_STATUS_CONNECTING", "position": 1 }
+    ],
+    "totalCount": 8
+  },
+  "GetCameraResponse": {
+    "correlationId": "corr-cam-get-001",
+    "camera": {
+      "deviceId": "esp32-cam-01",
+      "name": "Container 1 Camera",
+      "status": "CAMERA_STATUS_ONLINE",
+      "containerId": "container-001",
+      "position": 1,
+      "lastSeen": "2026-03-04T10:30:00Z",
+      "health": {
+        "wifiRssi": -45,
+        "freeHeap": "125000",
+        "uptimeSeconds": "3600",
+        "firmwareVersion": "2.1.0",
+        "resolution": "1600x1200",
+        "lastCapture": "2026-03-04T10:29:55Z"
+      },
+      "ipAddress": "192.168.10.101",
+      "macAddress": "AA:BB:CC:DD:EE:01"
+    }
+  },
+  "GetCameraResponse_minimalHealth": {
+    "correlationId": "corr-cam-get-minimal",
+    "camera": {
+      "deviceId": "esp32-cam-05",
+      "status": "CAMERA_STATUS_DISCOVERED",
+      "position": 1,
+      "health": {
+        "wifiRssi": -80,
+        "freeHeap": "50000",
+        "uptimeSeconds": "10"
+      }
+    }
+  },
+  "GetCameraStatusResponse": {
+    "correlationId": "corr-cam-status-001",
+    "deviceId": "esp32-cam-01",
+    "status": "CAMERA_STATUS_ONLINE",
+    "lastSeen": "2026-03-04T10:30:00Z",
+    "ready": true
+  },
+  "GetCameraStatusResponse_notReady": {
+    "correlationId": "corr-cam-status-002",
+    "deviceId": "esp32-cam-02",
+    "status": "CAMERA_STATUS_OFFLINE",
+    "ready": false
+  },
+  "ReconcileCamerasResponse": {
+    "correlationId": "corr-cam-reconcile-001",
+    "reconciledCount": 2,
+    "reconciledDeviceIds": ["esp32-cam-01", "esp32-cam-02"]
+  }
+}

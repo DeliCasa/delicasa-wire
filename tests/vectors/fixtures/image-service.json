@@ -1,0 +1,59 @@
+{
+  "ListImagesResponse": {
+    "correlationId": "corr-img-list-001",
+    "images": [
+      {
+        "id": "img-001",
+        "objectKey": "evidence/2026/03/04/ev-before-001.jpg",
+        "controllerId": "ctrl-001",
+        "containerId": "container-001",
+        "sessionId": "session-001",
+        "captureTag": "before_open",
+        "contentType": "image/jpeg",
+        "sizeBytes": "245760",
+        "width": 1600,
+        "height": 1200,
+        "createdAt": "2026-03-04T10:30:00Z"
+      },
+      {
+        "id": "img-002",
+        "objectKey": "evidence/2026/03/04/ev-after-001.jpg",
+        "controllerId": "ctrl-001",
+        "containerId": "container-001",
+        "sessionId": "session-001",
+        "captureTag": "after_close",
+        "contentType": "image/jpeg",
+        "sizeBytes": "251904",
+        "width": 1600,
+        "height": 1200,
+        "createdAt": "2026-03-04T10:31:00Z"
+      }
+    ],
+    "nextPageToken": "eyJvZmZzZXQiOjJ9",
+    "totalCount": 15
+  },
+  "SearchImagesResponse": {
+    "correlationId": "corr-img-search-001",
+    "images": [
+      {
+        "id": "img-001",
+        "objectKey": "evidence/2026/03/04/ev-before-001.jpg",
+        "controllerId": "ctrl-001",
+        "containerId": "container-001",
+        "sessionId": "session-001",
+        "captureTag": "before_open",
+        "contentType": "image/jpeg",
+        "sizeBytes": "245760",
+        "width": 1600,
+        "height": 1200,
+        "createdAt": "2026-03-04T10:30:00Z"
+      }
+    ],
+    "totalCount": 1
+  },
+  "GetPresignedUrlResponse": {
+    "correlationId": "corr-img-presign-001",
+    "url": "https://r2.example.com/evidence/2026/03/04/ev-before-001.jpg?X-Amz-Signature=abc123&X-Amz-Expires=3600",
+    "expiresAt": "2026-03-04T11:30:00Z"
+  }
+}

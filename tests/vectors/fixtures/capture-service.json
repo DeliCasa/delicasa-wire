@@ -1,0 +1,29 @@
+{
+  "CaptureImageRequest": {
+    "correlationId": "corr-capture-001",
+    "cameraId": "esp32-cam-01",
+    "idempotencyKey": "idem-key-abc123"
+  },
+  "CaptureImageResponse": {
+    "correlationId": "corr-capture-001",
+    "evidenceId": "ev-capture-001",
+    "cameraId": "esp32-cam-01",
+    "capturedAt": "2026-03-04T10:30:05Z",
+    "contentType": "image/jpeg",
+    "imageSizeBytes": "245760",
+    "objectKey": "evidence/2026/03/04/ev-capture-001.jpg",
+    "uploadStatus": "UPLOAD_STATUS_UPLOADED",
+    "cached": false
+  },
+  "CaptureImageResponse_cached": {
+    "correlationId": "corr-capture-002",
+    "evidenceId": "ev-capture-001",
+    "cameraId": "esp32-cam-01",
+    "capturedAt": "2026-03-04T10:30:05Z",
+    "contentType": "image/jpeg",
+    "imageSizeBytes": "245760",
+    "objectKey": "evidence/2026/03/04/ev-capture-001.jpg",
+    "uploadStatus": "UPLOAD_STATUS_UPLOADED",
+    "cached": true
+  }
+}

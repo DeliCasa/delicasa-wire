@@ -20,13 +20,6 @@ enum CaptureStatus {
   CAPTURE_STATUS_PENDING = 4;
 }
 
-enum UploadStatus {
-  UPLOAD_STATUS_UNSPECIFIED = 0;
-  UPLOAD_STATUS_UPLOADED = 1;
-  UPLOAD_STATUS_FAILED = 2;
-  UPLOAD_STATUS_UNVERIFIED = 3;
-}
-
 enum EvidencePairStatus {
   EVIDENCE_PAIR_STATUS_UNSPECIFIED = 0;
   EVIDENCE_PAIR_STATUS_COMPLETE = 1;
@@ -43,7 +36,7 @@ message EvidenceCapture {
   string content_type = 6;
   int64 image_size_bytes = 7;
   string object_key = 8;
-  UploadStatus upload_status = 9;
+  string upload_status = 9;
   string session_id = 10;
   string container_id = 11;
 }
