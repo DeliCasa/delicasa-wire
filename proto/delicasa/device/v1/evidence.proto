@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package delicasa.device.v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum CaptureTag {
+  CAPTURE_TAG_UNSPECIFIED = 0;
+  CAPTURE_TAG_BEFORE_OPEN = 1;
+  CAPTURE_TAG_AFTER_OPEN = 2;
+  CAPTURE_TAG_BEFORE_CLOSE = 3;
+  CAPTURE_TAG_AFTER_CLOSE = 4;
+}
+
+enum CaptureStatus {
+  CAPTURE_STATUS_UNSPECIFIED = 0;
+  CAPTURE_STATUS_CAPTURED = 1;
+  CAPTURE_STATUS_FAILED = 2;
+  CAPTURE_STATUS_TIMEOUT = 3;
+  CAPTURE_STATUS_PENDING = 4;
+}
+
+enum UploadStatus {
+  UPLOAD_STATUS_UNSPECIFIED = 0;
+  UPLOAD_STATUS_UPLOADED = 1;
+  UPLOAD_STATUS_FAILED = 2;
+  UPLOAD_STATUS_UNVERIFIED = 3;
+}
+
+enum EvidencePairStatus {
+  EVIDENCE_PAIR_STATUS_UNSPECIFIED = 0;
+  EVIDENCE_PAIR_STATUS_COMPLETE = 1;
+  EVIDENCE_PAIR_STATUS_INCOMPLETE = 2;
+  EVIDENCE_PAIR_STATUS_MISSING = 3;
+}
+
+message EvidenceCapture {
+  string evidence_id = 1;
+  CaptureTag capture_tag = 2;
+  CaptureStatus status = 3;
+  string camera_id = 4;
+  google.protobuf.Timestamp captured_at = 5;
+  string content_type = 6;
+  int64 image_size_bytes = 7;
+  string object_key = 8;
+  UploadStatus upload_status = 9;
+  string session_id = 10;
+  string container_id = 11;
+}
+
+message EvidencePair {
+  string contract_version = 1;
+  string session_id = 2;
+  string container_id = 3;
+  EvidencePairStatus pair_status = 4;
+  EvidenceCapture before = 5;
+  EvidenceCapture after = 6;
+  google.protobuf.Timestamp queried_at = 7;
+  int32 retry_after_seconds = 8;
+}

@@ -85,3 +85,10 @@ Breaking change detection compares against the latest git tag. Pre-first-tag, it
 - `gen/` is gitignored — consumers must run `pnpm gen` after cloning or after proto changes.
 - Zod schemas are handwritten, NOT auto-generated from proto. They intentionally differ from wire format.
 - This repo is part of the DeliCasa monorepo ecosystem (BridgeServer, NextClient, PiOrchestrator consume it).
+
+## Active Technologies
+- TypeScript 5.7+ (ESM only), Protobuf 3 + `zod ^3.23`, `@bufbuild/protobuf ^2.2`, `@connectrpc/connect ^2.0` (002-unified-wire-contracts)
+- N/A (contracts only) (002-unified-wire-contracts)
+
+## Recent Changes
+- 002-unified-wire-contracts: Added TypeScript 5.7+ (ESM only), Protobuf 3 + `zod ^3.23`, `@bufbuild/protobuf ^2.2`, `@connectrpc/connect ^2.0`

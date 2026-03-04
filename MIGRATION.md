@@ -6,7 +6,7 @@
 
 ```bash
 # BridgeServer or NextClient
-pnpm add @delicasa/wire@github:DeliCasa/delicasa-wire#v0.1.0
+pnpm add @delicasa/wire@github:DeliCasa/delicasa-wire#v0.2.0
 ```
 
 ### Via workspace path (monorepo)
@@ -15,41 +15,113 @@ pnpm add @delicasa/wire@github:DeliCasa/delicasa-wire#v0.1.0
 pnpm add @delicasa/wire@workspace:*
 ```
 
+## What changed in v0.2.0
+
+### New: PiOrchestrator HTTP Boundary Schemas
+
+Zod schemas for validating JSON responses from PiOrchestrator at trust boundaries.
+Replaces in-codebase schemas like `piorch-evidence-pair.schemas.ts` (BridgeServer)
+and `v1-cameras-schemas.ts` (PiDashboard).
+
+```typescript
+import {
+  // Container action (BridgeServer → PiOrch)
+  PiOrchContainerActionRequestSchema,
+  PiOrchContainerActionResponseSchema,
+  BridgeEvidenceCaptureSchema,
+
+  // Evidence pair (BridgeServer → PiOrch)
+  PiOrchEvidencePairSchema,
+  PairCaptureSchema,
+  PiOrchEvidencePairLivenessProofSchema,
+
+  // Cameras (PiDashboard + BridgeServer → PiOrch)
+  PiOrchCameraSchema,
+  PiOrchCameraHealthSchema,
+  PiOrchCameraListResponseSchema,
+  CapturedEvidenceSchema,
+
+  // Sessions (PiDashboard → PiOrch)
+  PiOrchSessionSchema,
+  PiOrchSessionListResponseSchema,
+  STALE_THRESHOLD_SECONDS,
+} from "@delicasa/wire/zod";
+```
+
+### New: MQTT Protocol Schemas
+
+Zod schemas documenting the EspCamV2 ↔ PiOrchestrator MQTT protocol — the
+4-part capture protocol, camera status/LWT, and command messages.
+
+```typescript
+import {
+  MqttCaptureAckSchema,
+  MqttCaptureInfoSchema,
+  MqttCaptureChunkSchema,
+  MqttCaptureCompleteSchema,
+  MqttCaptureResponseSchema,
+  MqttCameraCommandSchema,
+  MqttCameraStatusSchema,
+  MqttCameraLwtSchema,
+  MqttTopics,
+} from "@delicasa/wire/zod";
+```
+
+### New: Device Proto Package
+
+Proto definitions for camera, session, and evidence entities under
+`delicasa.device.v1`. Message types only — no gRPC services yet.
+
+```typescript
+import type { Camera } from "@delicasa/wire/gen/delicasa/device/v1/camera_pb";
+import type { OperationSession } from "@delicasa/wire/gen/delicasa/device/v1/session_pb";
+import type { EvidencePair } from "@delicasa/wire/gen/delicasa/device/v1/evidence_pb";
+```
+
+### Unchanged from v0.1.0
+
+- Existing proto services: ControllerService, ContainerAccessService, PurchaseSessionService
+- Existing Zod schemas: ControllerDomain, PurchaseSessionDomain, ErrorDomain
+- Helper functions: `parseOrThrow`, `safeParse`
+
 ## Importing generated types
 
 ```typescript
-// Message types
+// v0.1.0 — Client-facing service types (unchanged)
 import type { Controller } from "@delicasa/wire/gen/delicasa/v1/controller_pb";
-import type { PurchaseSession } from "@delicasa/wire/gen/delicasa/v1/purchase_session_pb";
-import type { Container } from "@delicasa/wire/gen/delicasa/v1/container_pb";
-
-// Service descriptors (for Connect clients)
 import { ControllerService } from "@delicasa/wire/gen/delicasa/v1/controller_service_pb";
-import { ContainerAccessService } from "@delicasa/wire/gen/delicasa/v1/container_service_pb";
-import { PurchaseSessionService } from "@delicasa/wire/gen/delicasa/v1/purchase_session_service_pb";
+
+// v0.2.0 — Device-layer types (new)
+import type { Camera, CameraHealth } from "@delicasa/wire/gen/delicasa/device/v1/camera_pb";
+import type { OperationSession } from "@delicasa/wire/gen/delicasa/device/v1/session_pb";
+import type { EvidenceCapture, EvidencePair } from "@delicasa/wire/gen/delicasa/device/v1/evidence_pb";
 ```
 
 ## Importing Zod domain schemas
 
 ```typescript
 import {
+  // Domain schemas (v0.1.0)
   ControllerDomain,
   PurchaseSessionDomain,
   ErrorDomain,
+
+  // PiOrch boundary schemas (v0.2.0)
+  PiOrchContainerActionResponseSchema,
+  PiOrchEvidencePairSchema,
+  PiOrchCameraListResponseSchema,
+  PiOrchSessionListResponseSchema,
+  STALE_THRESHOLD_SECONDS,
+
+  // MQTT schemas (v0.2.0)
+  MqttCaptureAckSchema,
+  MqttCameraStatusSchema,
+  MqttTopics,
+
+  // Helpers
   parseOrThrow,
   safeParse,
 } from "@delicasa/wire/zod";
-
-// Parse with throw on failure
-const controller = parseOrThrow(ControllerDomain, rawData);
-
-// Safe parse (returns result object)
-const result = safeParse(ControllerDomain, rawData);
-if (result.success) {
-  console.log(result.data);
-} else {
-  console.error(result.error);
-}
 ```
 
 ## Running buf generate
@@ -69,21 +141,14 @@ Generated files are in `gen/ts/` and are `.gitignore`'d. They must be regenerate
 pnpm lint:proto    # enforces Buf STANDARD lint rules
 ```
 
-Checks naming conventions (snake_case fields, PascalCase messages), package structure, enum zero values (`_UNSPECIFIED`), and more.
-
 ## Running buf breaking
 
 ```bash
 pnpm breaking:proto
 ```
 
-Compares current proto files against the latest git tag. Detects:
-- Removed fields or messages
-- Changed field types or numbers
-- Renamed RPCs
-- Removed services
-
-If no tags exist yet (pre-v0.1.0), the check skips gracefully.
+Compares current proto files against the latest git tag. Detects removed/changed
+fields, types, RPCs, and services.
 
 ## Formatting proto files
 
@@ -102,7 +167,7 @@ pnpm fmt:proto    # auto-formats all .proto files in place
 4. Commit all changes
 5. Tag and push:
    ```bash
-   git tag v0.2.0
+   git tag v0.3.0
    git push && git push --tags
    ```
 
