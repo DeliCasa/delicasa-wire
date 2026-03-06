@@ -1,4 +1,4 @@
-# Handoff Matrix — @delicasa/wire v0.4.0
+# Handoff Matrix — @delicasa/wire v0.5.0
 
 **Created**: 2026-03-04
 **Updated**: 2026-03-06
@@ -10,18 +10,35 @@ Add to each consumer repo's `package.json`:
 
 ```jsonc
 // BridgeServer/package.json
-"@delicasa/wire": "0.4.0"
+"@delicasa/wire": "0.5.0"
 
 // NextClient/package.json
-"@delicasa/wire": "0.4.0"
+"@delicasa/wire": "0.5.0"
 
 // PiDashboard/package.json
-"@delicasa/wire": "0.4.0"
+"@delicasa/wire": "0.5.0"
 ```
 
 **tsconfig requirement**: `"moduleResolution": "bundler"` or `"node16"` (required for subpath exports).
 
 After install: `pnpm gen` (in wire package) to regenerate TypeScript from protos.
+
+---
+
+## Service Boundaries
+
+The DeliCasa platform uses two proto packages with distinct boundaries:
+
+| Package | Boundary | Implemented By | Called By | Auth |
+|---------|----------|---------------|-----------|------|
+| `delicasa.v1.*` | **Client-facing** | BridgeServer | NextClient, PiDashboard (via Bridge) | Bearer JWT (Cognito) |
+| `delicasa.device.v1.*` | **Device-facing** | PiOrchestrator | BridgeServer (internal proxy), PiDashboard (LAN) | X-API-Key / none (LAN) |
+
+**Rule**: NextClient MUST NEVER call `delicasa.device.v1.*` services directly. All device interactions are proxied through BridgeServer's `delicasa.v1.*` services.
+
+**Proxy routing**: BridgeServer translates client-facing RPCs to device-facing RPCs internally:
+- `delicasa.v1.CaptureService.RequestCapture` → `delicasa.device.v1.CaptureService.CaptureImage`
+- `delicasa.v1.ImageService.*` → reads from R2/database (no device proxy needed)
 
 ---
 
@@ -41,6 +58,8 @@ After install: `pnpm gen` (in wire package) to regenerate TypeScript from protos
 | **ListImages** | **ImageService** | `/rpc/delicasa.v1.ImageService/ListImages` | Bearer JWT (Cognito) | **BridgeServer** |
 | **SearchImages** | **ImageService** | `/rpc/delicasa.v1.ImageService/SearchImages` | Bearer JWT (Cognito) | **BridgeServer** |
 | **GetPresignedUrl** | **ImageService** | `/rpc/delicasa.v1.ImageService/GetPresignedUrl` | Bearer JWT (Cognito) | **BridgeServer** |
+| **RequestCapture** | **CaptureService** | `/rpc/delicasa.v1.CaptureService/RequestCapture` | Bearer JWT (Cognito) | **BridgeServer** |
+| **GetCaptureStatus** | **CaptureService** | `/rpc/delicasa.v1.CaptureService/GetCaptureStatus` | Bearer JWT (Cognito) | **BridgeServer** |
 
 ### Device Services (delicasa.device.v1) — PiOrchestrator implements
 
@@ -56,7 +75,7 @@ After install: `pnpm gen` (in wire package) to regenerate TypeScript from protos
 | **ListSessions** | **SessionService** | `/rpc/delicasa.device.v1.SessionService/ListSessions` | X-API-Key / none (LAN) | **PiOrchestrator** |
 | **GetSession** | **SessionService** | `/rpc/delicasa.device.v1.SessionService/GetSession` | X-API-Key / none (LAN) | **PiOrchestrator** |
 
-**Bold** = new in v0.3.0
+**Bold** = new in v0.3.0+
 
 ---
 
@@ -169,18 +188,37 @@ curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.ImageService/GetPresign
   -d '{"correlationId": "test-012", "objectKey": "evidence/2026/03/04/ev-before-001.jpg", "expiresInSeconds": 3600}'
 ```
 
+### CaptureService (Client-Facing)
+
+> **Proxy note**: These RPCs are served by BridgeServer. `RequestCapture` internally proxies to `delicasa.device.v1.CaptureService.CaptureImage` on PiOrchestrator.
+
+```bash
+# RequestCapture (via BridgeServer)
+curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.CaptureService/RequestCapture \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $COGNITO_JWT" \
+  -d '{"correlationId": "test-013", "controllerId": "ctrl-001", "captureTag": "CAPTURE_TAG_BEFORE_OPEN", "idempotencyKey": "idem-001", "sessionId": "session-001"}'
+
+# GetCaptureStatus (via BridgeServer)
+curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.CaptureService/GetCaptureStatus \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $COGNITO_JWT" \
+  -d '{"correlationId": "test-014", "requestId": "req-001"}'
+```
+
 ---
 
 ## Per-Consumer Adoption Guide
 
 ### BridgeServer
 
-1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.5.0"` to `package.json`
 2. Run `pnpm install && pnpm gen` (in wire package)
 3. **Implement ImageService**: Create Connect handler for ListImages, SearchImages, GetPresignedUrl
 4. **Implement device proxy**: Forward device service RPCs to PiOrchestrator (CameraService, SessionService, EvidenceService, CaptureService)
-5. Import types: `import { ImageService } from "@delicasa/wire/gen/delicasa/v1/image_service_pb"`
-6. Register Connect routes under `/rpc/` base path
+5. **Implement CaptureService proxy**: `delicasa.v1.CaptureService.RequestCapture` internally calls `delicasa.device.v1.CaptureService.CaptureImage` on PiOrchestrator, then maps the device response to the client-facing `RequestCaptureResponse`. `GetCaptureStatus` polls the same device endpoint or reads from a request status cache.
+6. Import types: `import { ImageService } from "@delicasa/wire/gen/delicasa/v1/image_service_pb"` and `import { CaptureService } from "@delicasa/wire/gen/delicasa/v1/capture_service_pb"`
+7. Register Connect routes under `/rpc/` base path
 
 **Implementation Status** (from ops baseline 2026-03-04):
 - Connect RPC endpoints return **404** — handler registration not yet deployed
@@ -189,20 +227,20 @@ curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.ImageService/GetPresign
 
 ### NextClient
 
-1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.5.0"` to `package.json`
 2. Run `pnpm install && pnpm gen` (in wire package)
 3. **Remove HttpImageRepository stubs** — replace with Connect client using ImageService descriptor
 4. **Remove manual HTTP calls** for camera/session data — use device service descriptors via BridgeServer proxy
 5. Import: `import { ImageService } from "@delicasa/wire/gen/delicasa/v1/image_service_pb"`
 6. Use `@connectrpc/connect-web` transport targeting BridgeServer URL
-7. Use golden test vectors via `import fixtures from "@delicasa/wire/fixtures/camera-service"` for MSW mocks (also available: `capture-service`, `evidence-service`, `session-service`, `image-service`)
+7. Use golden test vectors via `import fixtures from "@delicasa/wire/fixtures/camera-service"` for MSW mocks (also available: `capture-service`, `client-capture-service`, `evidence-service`, `session-service`, `image-service`)
 8. Use factory functions via `import { makeCamera, makeListCamerasResponse } from "@delicasa/wire/testing"` for custom test fixtures
 
 **Open item**: JWT `aud` claim is hardcoded to a `workers.dev` URL in `BridgeAuthService`. This needs a source code fix to make the audience configurable via environment variable. The Zod dev defaults also reference `workers.dev` but are dead code in production (no runtime impact).
 
 ### PiDashboard
 
-1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.5.0"` to `package.json`
 2. Run `npm install && pnpm gen` (in wire package)
 3. Import device service descriptors for camera list, session list, evidence pair views
 4. Use `@connectrpc/connect-web` transport targeting PiOrchestrator on LAN (`http://localhost:8081`)

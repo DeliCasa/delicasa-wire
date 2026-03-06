@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package delicasa.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// CaptureRequestStatus represents the lifecycle of a client-initiated capture request.
+enum CaptureRequestStatus {
+  CAPTURE_REQUEST_STATUS_UNSPECIFIED = 0;
+  CAPTURE_REQUEST_STATUS_ACCEPTED = 1;
+  CAPTURE_REQUEST_STATUS_COMPLETED = 2;
+  CAPTURE_REQUEST_STATUS_FAILED = 3;
+  CAPTURE_REQUEST_STATUS_TIMEOUT = 4;
+}
+
+// ClientUploadStatus indicates the image upload state visible to client applications.
+enum ClientUploadStatus {
+  CLIENT_UPLOAD_STATUS_UNSPECIFIED = 0;
+  CLIENT_UPLOAD_STATUS_UPLOADED = 1;
+  CLIENT_UPLOAD_STATUS_FAILED = 2;
+  CLIENT_UPLOAD_STATUS_UNVERIFIED = 3;
+}
+
+// CaptureService provides image capture operations for client applications
+// (NextClient → BridgeServer). BridgeServer internally proxies to
+// delicasa.device.v1.CaptureService on PiOrchestrator.
+service CaptureService {
+  // Request an image capture on a controller's camera.
+  // May complete synchronously or require polling via GetCaptureStatus.
+  rpc RequestCapture(RequestCaptureRequest) returns (RequestCaptureResponse);
+
+  // Check the status of a previously submitted capture request.
+  rpc GetCaptureStatus(GetCaptureStatusRequest) returns (GetCaptureStatusResponse);
+}
+
+message RequestCaptureRequest {
+  string correlation_id = 1;
+  string controller_id = 2;
+  // Evidence phase tag: "CAPTURE_TAG_BEFORE_OPEN", "CAPTURE_TAG_AFTER_CLOSE", etc.
+  string capture_tag = 3;
+  // Request deduplication key.
+  string idempotency_key = 4;
+  // Optional session context for evidence linking.
+  string session_id = 5;
+}
+
+message RequestCaptureResponse {
+  string correlation_id = 1;
+  // BridgeServer-generated capture request identifier.
+  string request_id = 2;
+  CaptureRequestStatus status = 3;
+  // Fields below are populated when status is COMPLETED.
+  string evidence_id = 4;
+  string camera_id = 5;
+  google.protobuf.Timestamp captured_at = 6;
+  string content_type = 7;
+  int64 image_size_bytes = 8;
+  string object_key = 9;
+  ClientUploadStatus upload_status = 10;
+  // True if this response was served from idempotency cache.
+  bool cached = 11;
+}
+
+message GetCaptureStatusRequest {
+  string correlation_id = 1;
+  // The capture request ID from RequestCaptureResponse.
+  string request_id = 2;
+}
+
+message GetCaptureStatusResponse {
+  string correlation_id = 1;
+  string request_id = 2;
+  CaptureRequestStatus status = 3;
+  // Fields below are populated when status is COMPLETED.
+  string evidence_id = 4;
+  string camera_id = 5;
+  google.protobuf.Timestamp captured_at = 6;
+  string content_type = 7;
+  int64 image_size_bytes = 8;
+  string object_key = 9;
+  ClientUploadStatus upload_status = 10;
+}

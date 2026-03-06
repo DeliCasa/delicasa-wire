@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import cameraFixtures from "../vectors/fixtures/camera-service.json";
 import captureFixtures from "../vectors/fixtures/capture-service.json";
+import clientCaptureFixtures from "../vectors/fixtures/client-capture-service.json";
 import evidenceFixtures from "../vectors/fixtures/evidence-service.json";
 import sessionFixtures from "../vectors/fixtures/session-service.json";
 import imageFixtures from "../vectors/fixtures/image-service.json";
@@ -39,6 +40,15 @@ describe("Fixture Exports", () => {
     expect(keys).toContain("ListSessionsResponse");
     expect(keys).toContain("GetSessionResponse");
     expect(keys.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("client-capture-service.json contains expected fixture keys", () => {
+    const keys = Object.keys(clientCaptureFixtures);
+    expect(keys).toContain("RequestCaptureRequest");
+    expect(keys).toContain("RequestCaptureResponse");
+    expect(keys).toContain("GetCaptureStatusRequest");
+    expect(keys).toContain("GetCaptureStatusResponse");
+    expect(keys.length).toBeGreaterThanOrEqual(4);
   });
 
   it("image-service.json contains expected fixture keys", () => {

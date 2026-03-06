@@ -46,3 +46,10 @@ export {
   makeSearchImagesResponse,
   makeGetPresignedUrlResponse,
 } from "./factories/image.js";
+
+export {
+  makeRequestCaptureRequest,
+  makeRequestCaptureResponse,
+  makeGetCaptureStatusRequest,
+  makeGetCaptureStatusResponse,
+} from "./factories/client-capture.js";
