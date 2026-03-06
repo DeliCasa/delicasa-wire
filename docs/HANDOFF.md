@@ -1,6 +1,6 @@
-# HANDOFF — @delicasa/wire v0.4.0
+# HANDOFF — @delicasa/wire v0.5.0
 
-> **v0.4.0 update**: This document is superseded by [HANDOFF_MATRIX.md](./HANDOFF_MATRIX.md) for the complete RPC mapping table, curl examples, and per-repo adoption guide. See also [MIGRATION_v0.3_to_v0.4.md](./MIGRATION_v0.3_to_v0.4.md) for upgrade instructions.
+> **v0.5.0 update**: This document is superseded by [HANDOFF_MATRIX.md](./HANDOFF_MATRIX.md) for the complete RPC mapping table, curl examples, and per-repo adoption guide. See also [MIGRATION_v0.4_to_v0.5.md](./MIGRATION_v0.4_to_v0.5.md) for upgrade instructions.
 
 ## Per-Repo Integration Guide
 

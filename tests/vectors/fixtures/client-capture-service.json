@@ -1,0 +1,38 @@
+{
+  "RequestCaptureRequest": {
+    "correlationId": "corr-capture-req-001",
+    "controllerId": "ctrl-001",
+    "captureTag": "CAPTURE_TAG_BEFORE_OPEN",
+    "idempotencyKey": "idem-001",
+    "sessionId": "session-001"
+  },
+  "RequestCaptureResponse": {
+    "correlationId": "corr-capture-resp-001",
+    "requestId": "req-001",
+    "status": "CAPTURE_REQUEST_STATUS_COMPLETED",
+    "evidenceId": "ev-before-001",
+    "cameraId": "esp32-cam-01",
+    "capturedAt": "2026-03-06T10:30:00Z",
+    "contentType": "image/jpeg",
+    "imageSizeBytes": "245760",
+    "objectKey": "evidence/2026/03/06/ev-before-001.jpg",
+    "uploadStatus": "CLIENT_UPLOAD_STATUS_UPLOADED",
+    "cached": false
+  },
+  "GetCaptureStatusRequest": {
+    "correlationId": "corr-capture-status-001",
+    "requestId": "req-001"
+  },
+  "GetCaptureStatusResponse": {
+    "correlationId": "corr-capture-status-resp-001",
+    "requestId": "req-001",
+    "status": "CAPTURE_REQUEST_STATUS_COMPLETED",
+    "evidenceId": "ev-before-001",
+    "cameraId": "esp32-cam-01",
+    "capturedAt": "2026-03-06T10:30:00Z",
+    "contentType": "image/jpeg",
+    "imageSizeBytes": "245760",
+    "objectKey": "evidence/2026/03/06/ev-before-001.jpg",
+    "uploadStatus": "CLIENT_UPLOAD_STATUS_UPLOADED"
+  }
+}
