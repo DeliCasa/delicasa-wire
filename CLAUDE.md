@@ -90,6 +90,8 @@ Breaking change detection compares against the latest git tag. Pre-first-tag, it
 - TypeScript 5.7+ (ESM only), Protobuf 3 + `zod ^3.23`, `@bufbuild/protobuf ^2.2`, `@connectrpc/connect ^2.0` (002-unified-wire-contracts)
 - N/A (contracts only) (002-unified-wire-contracts)
 - TypeScript 5.7+ (ESM only), Protobuf 3 + `@bufbuild/protobuf ^2.2`, `@connectrpc/connect ^2.0`, `zod ^3.23` (003-device-rpc-contracts)
+- TypeScript 5.7+ (ESM only) + `@bufbuild/protobuf ^2.2` (for `JsonValue` type), `zod ^3.23` (existing, not needed for testing module) (004-testing-exports)
+- N/A (contracts-only package) (004-testing-exports)
 
 ## Recent Changes
 - 002-unified-wire-contracts: Added TypeScript 5.7+ (ESM only), Protobuf 3 + `zod ^3.23`, `@bufbuild/protobuf ^2.2`, `@connectrpc/connect ^2.0`

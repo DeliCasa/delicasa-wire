@@ -1,11 +1,13 @@
 {
   "name": "@delicasa/wire",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "description": "gRPC-first contracts, generated TypeScript, and Zod domain validation for the DeliCasa platform",
   "files": [
     "gen/ts",
-    "src/zod"
+    "src/zod",
+    "src/testing",
+    "tests/vectors/fixtures"
   ],
   "exports": {
     "./gen/*": {
@@ -15,7 +17,12 @@
     "./zod": {
       "types": "./src/zod/index.d.ts",
       "default": "./src/zod/index.js"
-    }
+    },
+    "./testing": {
+      "types": "./src/testing/index.d.ts",
+      "default": "./src/testing/index.js"
+    },
+    "./fixtures/*": "./tests/vectors/fixtures/*.json"
   },
   "scripts": {
     "gen": "buf generate",
