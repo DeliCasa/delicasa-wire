@@ -1,7 +1,8 @@
-# Handoff Matrix — @delicasa/wire v0.3.0
+# Handoff Matrix — @delicasa/wire v0.4.0
 
 **Created**: 2026-03-04
-**Wire Package**: `@delicasa/wire@0.3.0`
+**Updated**: 2026-03-06
+**Wire Package**: `@delicasa/wire@0.4.0`
 
 ## Dependency Pin
 
@@ -9,13 +10,13 @@ Add to each consumer repo's `package.json`:
 
 ```jsonc
 // BridgeServer/package.json
-"@delicasa/wire": "0.3.0"
+"@delicasa/wire": "0.4.0"
 
 // NextClient/package.json
-"@delicasa/wire": "0.3.0"
+"@delicasa/wire": "0.4.0"
 
 // PiDashboard/package.json
-"@delicasa/wire": "0.3.0"
+"@delicasa/wire": "0.4.0"
 ```
 
 **tsconfig requirement**: `"moduleResolution": "bundler"` or `"node16"` (required for subpath exports).
@@ -104,6 +105,8 @@ curl -X POST http://192.168.10.1:8081/rpc/delicasa.device.v1.CameraService/Recon
 
 ### CaptureService
 
+> **Implementation note**: CaptureImage triggers the 4-phase MQTT capture protocol (Ack → Info → Chunk → Complete) between PiOrchestrator and ESP32. See [MQTT_PROTO_MAPPING.md](./MQTT_PROTO_MAPPING.md) for the complete field-by-field mapping from MQTT messages to the `CaptureImageResponse` proto.
+
 ```bash
 # CaptureImage
 curl -X POST http://192.168.10.1:8081/rpc/delicasa.device.v1.CaptureService/CaptureImage \
@@ -172,26 +175,34 @@ curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.ImageService/GetPresign
 
 ### BridgeServer
 
-1. Add `"@delicasa/wire": "0.3.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
 2. Run `pnpm install && pnpm gen` (in wire package)
 3. **Implement ImageService**: Create Connect handler for ListImages, SearchImages, GetPresignedUrl
 4. **Implement device proxy**: Forward device service RPCs to PiOrchestrator (CameraService, SessionService, EvidenceService, CaptureService)
 5. Import types: `import { ImageService } from "@delicasa/wire/gen/delicasa/v1/image_service_pb"`
 6. Register Connect routes under `/rpc/` base path
 
+**Implementation Status** (from ops baseline 2026-03-04):
+- Connect RPC endpoints return **404** — handler registration not yet deployed
+- BridgeServer health check passes (`/health` returns OK), but `/trpc/health.check` reports a db column mismatch (`column "d"."stripe_customer_id" does not exist`) — this is a pre-existing schema issue unrelated to wire contracts
+- All 3 Dokku apps (BridgeServer, NextClient, PiDashboard) rebuilt successfully against current dependencies
+
 ### NextClient
 
-1. Add `"@delicasa/wire": "0.3.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
 2. Run `pnpm install && pnpm gen` (in wire package)
 3. **Remove HttpImageRepository stubs** — replace with Connect client using ImageService descriptor
 4. **Remove manual HTTP calls** for camera/session data — use device service descriptors via BridgeServer proxy
 5. Import: `import { ImageService } from "@delicasa/wire/gen/delicasa/v1/image_service_pb"`
 6. Use `@connectrpc/connect-web` transport targeting BridgeServer URL
-7. Use golden test vectors from `tests/vectors/fixtures/` for MSW mocks
+7. Use golden test vectors via `import fixtures from "@delicasa/wire/fixtures/camera-service"` for MSW mocks (also available: `capture-service`, `evidence-service`, `session-service`, `image-service`)
+8. Use factory functions via `import { makeCamera, makeListCamerasResponse } from "@delicasa/wire/testing"` for custom test fixtures
+
+**Open item**: JWT `aud` claim is hardcoded to a `workers.dev` URL in `BridgeAuthService`. This needs a source code fix to make the audience configurable via environment variable. The Zod dev defaults also reference `workers.dev` but are dead code in production (no runtime impact).
 
 ### PiDashboard
 
-1. Add `"@delicasa/wire": "0.3.0"` to `package.json`
+1. Add `"@delicasa/wire": "0.4.0"` to `package.json`
 2. Run `npm install && pnpm gen` (in wire package)
 3. Import device service descriptors for camera list, session list, evidence pair views
 4. Use `@connectrpc/connect-web` transport targeting PiOrchestrator on LAN (`http://localhost:8081`)
@@ -208,5 +219,7 @@ curl -X POST https://bridge.delicasa.dev/rpc/delicasa.v1.ImageService/GetPresign
 ### EspCamV2 (C++)
 
 1. **Reference only** — EspCamV2 does not consume this npm package
-2. Use MQTT message schemas documented in Zod schemas (`@delicasa/wire/zod`) as the canonical format for camera status, capture ack, capture chunks, capture complete messages
-3. Golden test vectors in `tests/vectors/fixtures/` can be used to validate message format compliance
+2. **ESP32 stays on MQTT** — this is a non-negotiable architectural decision. See [ADR-001-ESP32-STAYS-MQTT.md](./ADR-001-ESP32-STAYS-MQTT.md) for rationale
+3. Use MQTT message schemas documented in Zod schemas (`@delicasa/wire/zod`) as the canonical format for camera status, capture ack, capture chunks, capture complete messages
+4. See [MQTT_PROTO_MAPPING.md](./MQTT_PROTO_MAPPING.md) for how MQTT messages map to proto `CaptureImageResponse` fields
+5. Golden test vectors in `tests/vectors/fixtures/` can be used to validate message format compliance
